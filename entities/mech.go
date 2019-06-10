@@ -1,51 +1,55 @@
 package entities
 
-import (
-	"math/rand"
-	"time"
-)
-
 type Mech struct {
-	Base Character
+	base CharacterBase
 }
 
-func NewStandardMech() Mech {
-	m  := Mech{}
-
-	m.Base.Name = "MechName"
-	m.Base.Tribe = MechTribe
-
-	m.Base.Stats.Health = 100
-	m.Base.Stats.AttackDamage = 50
-	m.Base.Stats.AttackSpeed = 1.0
-	m.Base.Stats.MovementSpeed = 40
-	m.Base.Stats.CritPercentage = 0.0
-
-	return m
+func (m Mech) Display() string {
+	return m.base.Display()
 }
 
-func NewGeneticMech() Mech {
-
-	m  := Mech{}
-
-	m.Base.Name = "MechName"
-	m.Base.Tribe = MechTribe
-
-	m.Base.Stats.Health = uint16(100 + randomInt16(-10, 10))
-	m.Base.Stats.AttackDamage = uint16(20 + randomInt16(-10, 10))
-	m.Base.Stats.AttackSpeed = 1.0 + randomFloat32(-0.3, 0.3)
-	m.Base.Stats.MovementSpeed = uint16(100 + randomInt16(-10, 10))
-	m.Base.Stats.CritPercentage = 0.0
-
-	return m
+func (m Mech) Name() string {
+	return m.base.Name
 }
 
-func randomFloat32(min, max float32) float32 {
-	rand.Seed(time.Now().Unix())
-	return min + rand.Float32() * (max - min)
+func (m Mech) Stats() Stats {
+	return m.base.Stats
 }
 
-func randomInt16(min, max int16) int16 {
-	rand.Seed(time.Now().Unix())
-	return int16(rand.Intn(int(max)-int(min)) + int(min))
+func (Mech) Tribe() CharacterTribe {
+	return MechTribe
+}
+
+func NewMech() Character {
+	c  := Mech{}
+	c.base.Name = "MechName"
+	c.base.Tribe = MechTribe
+	c.base.Stats = mechBaseStats()
+	return c
+}
+
+func mechBaseStats() Stats {
+	return Stats {
+		Health : 100,
+		AttackDamage : 50,
+		AttackSpeed : 1.0,
+		MovementSpeed : 40,
+		CritPercentage : 0.0,
+	}
+}
+
+func NewGeneticMech() Character {
+
+	character := NewMech()
+
+	mech, ok := character.(Mech)
+	if !ok {
+		panic("We expected a mech")
+	}
+
+	mech.base.Stats.Health += uint16(randomInt16(-10, 10))
+	mech.base.Stats.AttackDamage += uint16(randomInt16(-10, 10))
+	mech.base.Stats.AttackSpeed += randomFloat32(-0.3, 0.3)
+	mech.base.Stats.MovementSpeed += uint16(randomInt16(-10, 10))
+	return &mech
 }
