@@ -1,12 +1,25 @@
 package main
 
-import "fmt"
-import "github.com/tahcohcat/combat-engine/entities"
+import (
+	"fmt"
+	"github.com/tahcohcat/combat-engine/rest"
+	"sync"
+	"time"
+)
+
+var waitGroup sync.WaitGroup
 
 func main() {
 
-	//todo: lobby where players are set up
+	waitGroup.Add(1)
+	go rest.StartHTTPServer(8000, &waitGroup)
 
+	//wait for server startup
+	time.Sleep(1)
+
+
+
+	/*
 	players := make([]entities.Player, 0)
 
 	playerOne := entities.Player{
@@ -31,23 +44,8 @@ func main() {
 		MaxRounds: 10 }
 
 	game.Start()
+	*/
+	fmt.Println("Game has ended. Waiting for HTTP server shutdown")
 
-	dragOne := entities.NewGeneticDragon()
-	mechOne := entities.NewGeneticMech()
-
-	fmt.Printf("Mech[%s]  : [hp:%03d, ad:%03d, as:%02.2f, m:%03d, c:%03.2f]\n",
-		mechOne.Name(),
-		mechOne.Stats().Health,
-		mechOne.Stats().AttackDamage,
-		mechOne.Stats().AttackSpeed,
-		mechOne.Stats().MovementSpeed,
-		mechOne.Stats().CritPercentage)
-
-	fmt.Printf("Drag[%s]: [hp:%03d, ad:%03d, as:%02.2f, m:%03d, c:%03.2f]\n",
-		dragOne.Name(),
-		dragOne.Stats().Health,
-		dragOne.Stats().AttackDamage,
-		dragOne.Stats().AttackSpeed,
-		dragOne.Stats().MovementSpeed,
-		dragOne.Stats().CritPercentage)
+	waitGroup.Wait()
 }

@@ -18,6 +18,7 @@ func (m *Market) Populate() {
 }
 
 func (m Market) Display() string {
+
 	s := string("")
 	for _, character := range m.characterOptions {
 		s += fmt.Sprintf("%s", character.Display())
