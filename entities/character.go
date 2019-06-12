@@ -3,6 +3,7 @@ package entities
 import "fmt"
 
 type CharacterTribe int
+type ResourceType int
 
 const NumTribes = 2
 
@@ -10,6 +11,20 @@ const (
 	MechTribe CharacterTribe = 0
 	DragonTribe CharacterTribe = 1
 )
+
+const (
+	ResGold ResourceType = 0
+	ResSpecial ResourceType = 1
+	ResLight ResourceType = 2
+	ResDark ResourceType = 3
+)
+
+type Cost struct {
+
+	//resource types list
+	//and their quantities
+	Resources [] map[ResourceType]int
+}
 
 type Stats struct {
 	Health uint16
@@ -38,6 +53,7 @@ type CharacterBase struct {
 	Name string
 	Tribe CharacterTribe
 	Stats Stats
+	Cost Cost
 }
 
 func (b CharacterBase) Display() string {

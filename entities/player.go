@@ -27,3 +27,7 @@ func (player Player) PresentMarket(market *Market) {
 		player.Name, market.Display())
 }
 
+func (player *Player) HandleMarketBuy() {
+	
+}
+

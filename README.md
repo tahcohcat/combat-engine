@@ -10,4 +10,9 @@ There will be a market where players can spend resources to pick more characters
 
 Any unpicked characters will be moved to the player on the left such that each player will receive the remaining sets etc. 
 
- 
+
+
+# Ideas
+
+ResLight, ResDark - modifies goodness of player - either could be a requirement for some characters to either be player or be enhanced. 
+Seems better to make it an default attribute of each character : Good, Bad, Neutral. Can also be used to create some assymetric game effects. 

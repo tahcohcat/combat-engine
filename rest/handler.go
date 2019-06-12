@@ -25,8 +25,6 @@ func Game_Handler_POST(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	log.Println(game)
-
 	w.Header().Set("Content-Type", "application/json")
 
 	responseBody := make(map[string]string)

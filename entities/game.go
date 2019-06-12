@@ -1,6 +1,11 @@
 package entities
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"sync"
+	"time"
+)
 
 type Game struct {
 	IsRunning bool
@@ -20,7 +25,14 @@ func (game Game) numberPlayers() int {
 
 func (game *Game) playAnotherRound() {
 
+	var waitGroup sync.WaitGroup
+
 	game.RoundNumber++
+
+	timerCallback := make(chan bool, 1)
+	waitGroup.Add(1)
+	go SetTimer(&waitGroup, timerCallback, 5 * time.Second)
+	var isTimerDone bool = false
 
 	//round - phase 1 - markets
 	for _, player := range game.Players {
@@ -28,6 +40,10 @@ func (game *Game) playAnotherRound() {
 		market.Populate()
 		player.PresentMarket(&market)
 	}
+	log.Println("All players received their cards")
+
+	isTimerDone = <-timerCallback
+	log.Printf("Timer return as %t\n", isTimerDone)
 
 }
 
