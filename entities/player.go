@@ -16,6 +16,17 @@ type Player struct {
 
 	IsAlive bool
 
+	CardSelectChan chan int
+
+}
+
+func NewPlayer(name string, number uint8) Player {
+	return Player{
+		Name: name,
+		Number: number,
+		IsAlive: true,
+		CardSelectChan : make(chan int),
+	}
 }
 
 func (player Player) IsPlayerAlive() bool {

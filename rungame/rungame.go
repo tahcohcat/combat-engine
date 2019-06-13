@@ -18,23 +18,10 @@ func main() {
 	//wait for server startup
 	time.Sleep(1)
 	*/
-	
+
 	players := make([]entities.Player, 0)
-
-	playerOne := entities.Player{
-		Name: "player-one",
-		Number: 0,
-		Characters: make([]entities.Character, 0),
-		IsAlive : true}
-
-	playerTwo := entities.Player{
-		Name: "player-two",
-		Number: 1,
-		Characters: make([]entities.Character, 0),
-		IsAlive : true}
-
-	players = append(players, playerOne)
-	players = append(players, playerTwo)
+	players = append(players, entities.NewPlayer("player-one", 0))
+	players = append(players, entities.NewPlayer("player-two", 1))
 
 	game := entities.Game{
 		IsRunning : false,
