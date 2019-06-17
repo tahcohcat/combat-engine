@@ -12,20 +12,29 @@ type Player struct {
 	// for turn order
 	Number uint8
 
-	Characters []Character
+	// Characters held by player
+	CharacterHand []Character
+
+	ActionChannel chan Action
+
+	Board PlayerBoard
 
 	IsAlive bool
-
-	CardSelectChan chan int
-
 }
 
 func NewPlayer(name string, number uint8) Player {
+
+	regions := make([]Region, 1)
+	regions = append(regions, NewRegion(3))
+
 	return Player{
 		Name: name,
 		Number: number,
 		IsAlive: true,
-		CardSelectChan : make(chan int),
+		ActionChannel : make(chan Action),
+		Board : PlayerBoard{
+			regions,
+		},
 	}
 }
 
@@ -38,7 +47,7 @@ func (player Player) PresentMarket(market *Market) {
 		player.Name, market.Display())
 }
 
+//Callback from client with selection
 func (player *Player) HandleMarketBuy() {
 	
 }
-

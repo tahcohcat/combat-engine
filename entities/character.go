@@ -47,6 +47,7 @@ type Character interface {
 	Stats() Stats
 	Tribe() CharacterTribe
 	Display() string
+	Resource() GameResource
 }
 
 type CharacterBase struct {
@@ -54,6 +55,7 @@ type CharacterBase struct {
 	Tribe CharacterTribe
 	Stats Stats
 	Cost Cost
+	Resource GameResource
 }
 
 func (b CharacterBase) Display() string {

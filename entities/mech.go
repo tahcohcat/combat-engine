@@ -20,11 +20,16 @@ func (Mech) Tribe() CharacterTribe {
 	return MechTribe
 }
 
+func (m Mech) Resource() GameResource {
+	return m.base.Resource
+}
+
 func NewMech() Character {
 	c  := Mech{}
 	c.base.Name = "MechName"
 	c.base.Tribe = MechTribe
 	c.base.Stats = mechBaseStats()
+	c.base.Resource = GenerateResource(ResCharacter, "resource-character-mech")
 	return c
 }
 

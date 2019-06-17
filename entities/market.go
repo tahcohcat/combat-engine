@@ -4,15 +4,17 @@ import "fmt"
 
 
 type Market struct {
-	characterOptions []Character
-	size uint8
+	CharacterOptions []Character
+	Size uint8
 }
 
 func (m *Market) Populate() {
 
-	for i := uint8(0); i <= m.size; i++ {
-		m.characterOptions = append(
-			m.characterOptions,
+	m.CharacterOptions = nil
+
+	for i := uint8(0); i <= m.Size; i++ {
+		m.CharacterOptions = append(
+			m.CharacterOptions,
 			getRandomCharacter())
 	}
 }
@@ -20,7 +22,7 @@ func (m *Market) Populate() {
 func (m Market) Display() string {
 
 	s := string("")
-	for _, character := range m.characterOptions {
+	for _, character := range m.CharacterOptions {
 		s += fmt.Sprintf("%s", character.Display())
 	}
 	return fmt.Sprintf("%s\n", s)

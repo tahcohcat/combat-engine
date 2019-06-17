@@ -1,9 +1,15 @@
 package entities
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Dragon struct {
 	base CharacterBase
+}
+
+func (d Dragon) Resource() GameResource {
+	return d.base.Resource
 }
 
 func (d Dragon) Display() string {
@@ -27,6 +33,7 @@ func NewDragon() Character {
 	c.base.Name = "DragonName"
 	c.base.Tribe = DragonTribe
 	c.base.Stats = dragonBaseStats()
+	c.base.Resource = GenerateResource(ResCharacter, "resource-charactor-dragon")
 	return c
 }
 
