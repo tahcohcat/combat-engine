@@ -48,10 +48,20 @@ func (game *Game) start(Player1Action chan Action, Player2Action chan Action, Ga
 			game.CurrentRoundPhase = game.CurrentRoundPhase +  1
 		case <-Player1Action:
 			action := <-Player1Action
-			log.Printf("Player 1 [%s]", action.AsString())
+			if game.IsValidAction(action) {
+				log.Printf("Player 1 [%s]", action.AsString())
+			} else {
+				log.Printf("Player 1 [%s] was ILLEGAL in %s",
+					action.AsString(), RoundPhaseAsString(game.CurrentRoundPhase))
+			}
 		case <-Player2Action:
 			action := <-Player2Action
-			log.Printf("Player 2 [%s]", action.AsString())
+			if game.IsValidAction(action) {
+				log.Printf("Player 2 [%s]", action.AsString())
+			} else {
+				log.Printf("Player 2 [%s] was ILLEGAL in %s",
+					action.AsString(), RoundPhaseAsString(game.CurrentRoundPhase))
+			}
 		case <-GameEnd:
 			log.Print("End of game")
 			return
@@ -69,18 +79,28 @@ func (game *Game) WaitForInput(p *Player, wg *sync.WaitGroup) {
 	for {
 
 		time.Sleep(3 * time.Second)
-		//cardSelection := rand.Intn(8 - 1) + 1
 
-		// simulating player performing appropriate action
-		market := game.Markets[p.Number]
+		if game.CurrentRoundPhase == MarketPhase {
+			// simulating player performing appropriate action
+			market := game.Markets[p.Number]
 
-		pickedCharacterIndex := randomInt16(0, int16(len(market.CharacterOptions)))
-		resource := market.CharacterOptions[pickedCharacterIndex].Resource()
+			pickedCharacterIndex := randomInt16(0, int16(len(market.CharacterOptions)))
+			resource := market.CharacterOptions[pickedCharacterIndex].Resource()
 
-		log.Printf("Player [%s] selecting card [%d]... [%s | %s | type:%d]",
-			p.Name, pickedCharacterIndex, resource.Name, resource.Id.String(), resource.Type)
+			log.Printf("Player [%s] picking card [%d]... [%s | %s | type:%d]",
+				p.Name, pickedCharacterIndex, resource.Name, resource.Id.String(), resource.Type)
+			p.ActionChannel <- NewPickCharacterAction(resource)
+		}
+		if game.CurrentRoundPhase == CharPlacePhase {
 
-		p.ActionChannel <- NewPlayCharacterAction(resource)
+			pickedCharacterIndex := randomInt16(0, int16(len(p.CharacterHand)))
+			resource := p.CharacterHand[pickedCharacterIndex].Resource()
+
+			log.Printf("Player [%s] playing card [%d]... [%s | %s | type:%d]",
+				p.Name, pickedCharacterIndex, resource.Name, resource.Id.String(), resource.Type)
+
+			p.ActionChannel <- NewPickCharacterAction(resource)
+		}
 	}
 }
 
@@ -132,5 +152,12 @@ func (game *Game) SetUpCurrentPhase() {
 	default: {
 		panic("Implement me")
 	}
+	}
+}
+func (game Game) IsValidAction(action Action) bool {
+	switch game.CurrentRoundPhase {
+	case MarketPhase: return action.ActionType() == PickCharacter
+	case CharPlacePhase: return action.ActionType() == PlayCharacter
+	default: return false
 	}
 }
